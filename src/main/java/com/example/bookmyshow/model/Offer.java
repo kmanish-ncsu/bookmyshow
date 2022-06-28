@@ -21,8 +21,6 @@ public class Offer {
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "offers")
     private List<Theater> theaters = new java.util.ArrayList<>();
 
-//    private String city;
-
     @Enumerated(EnumType.STRING)
     private OfferType offerType;
 

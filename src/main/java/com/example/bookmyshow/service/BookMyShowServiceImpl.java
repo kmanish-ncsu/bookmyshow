@@ -9,6 +9,7 @@ import com.example.bookmyshow.exception.InvalidBookingException;
 import com.example.bookmyshow.exception.SeatUnavailableException;
 import com.example.bookmyshow.model.*;
 import com.example.bookmyshow.offers.OfferProcessor;
+import com.example.bookmyshow.offers.OfferProcessorManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -54,13 +55,12 @@ public class BookMyShowServiceImpl implements BookMyShowService {
     BookingRepository bookingRepository;
 
     @Autowired
-    @Qualifier("afternoon-ticket-offer")
-    OfferProcessor offerProcessor;
+    OfferProcessorManager offerProcessorManager;
 
     @Value("${theater.seat.basic.price}")
     private BigDecimal basicPrice;
 
-    @Value("${theater.seat.basic.price}")
+    @Value("${theater.seat.premium.price}")
     private BigDecimal premiumPrice;
 
     @Transactional
@@ -72,7 +72,6 @@ public class BookMyShowServiceImpl implements BookMyShowService {
      public List<ShowSeatDTO> findAllAvailableSeatsForShow(Long showid){
          List<ShowSeat> showSeats = showSeatRepository.findAllNonPendingNonConfirmedShowSeatsNative(showid, ShowSeat.BookingStatus.CONFIRMED.toString(), ShowSeat.BookingStatus.RESERVED_PAYMENT_PENDING.toString());
          List<ShowSeatDTO> collect = showSeats.stream().map(showSeat -> new ShowSeatDTO(showSeat)).collect(Collectors.toList());
-         System.out.println("ShowSeatDTO size "+collect.size());
          return collect;
      }
 
@@ -87,7 +86,7 @@ public class BookMyShowServiceImpl implements BookMyShowService {
              Booking booking = new Booking();
              booking.setBookedBy(customer);
              booking.setTotalAmount(getPaymentAmount(showSeats, bookingRequest));
-             offerProcessor.process(showSeats, booking);
+             offerProcessorManager.process(showSeats, booking);
              booking = bookingRepository.save(booking);
              for(ShowSeat showSeat: showSeats){
                  showSeat.setBooking(booking);

@@ -16,27 +16,23 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
-@Component("afternoon-ticket-offer")
 @Getter
 @Setter
 public class AfternoonTicket20PercentOffer implements OfferProcessor {
 
     public static final double TWENTY_PERCENT_OFF = 0.8;
 
-    @Autowired
     BookingRepository bookingRepository;
 
-    @Value("${theater.seat.basic.price}")
     private BigDecimal basicPrice;
 
-    @Value("${theater.seat.basic.price}")
     private BigDecimal premiumPrice;
 
-    @Autowired
-    @Qualifier("third-ticket-offer")
-    public OfferProcessor nextProcessor;
-
-
+    public AfternoonTicket20PercentOffer(BookingRepository bookingRepository, BigDecimal basicPrice, BigDecimal premiumPrice) {
+        this.bookingRepository=bookingRepository;
+        this.basicPrice=basicPrice;
+        this.premiumPrice=premiumPrice;
+    }
 
     @Override
     public void process(List<ShowSeat> showSeats, Booking booking) {
@@ -49,12 +45,7 @@ public class AfternoonTicket20PercentOffer implements OfferProcessor {
             if(afternoonShow(show)){
                 booking.setTotalAmount(booking.getTotalAmount().multiply(BigDecimal.valueOf(TWENTY_PERCENT_OFF)));
                 bookingRepository.save(booking);
-                System.out.println("AfternoonTicket20PercentOffer APPLIED !!!!!!!!!!!!!");
             }
-        }
-
-        if(this.nextProcessor!=null){
-            this.nextProcessor.process(showSeats, booking);
         }
     }
 
@@ -67,8 +58,4 @@ public class AfternoonTicket20PercentOffer implements OfferProcessor {
         return false;
     }
 
-    @Override
-    public void setNextProcessor(ThirdTicket50PercentOffer thirdTicket50PercentOffer) {
-        this.nextProcessor = nextProcessor;
-    }
 }

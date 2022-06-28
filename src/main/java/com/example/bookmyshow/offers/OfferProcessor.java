@@ -9,5 +9,4 @@ public interface OfferProcessor {
 
     public void process(List<ShowSeat> showSeats, Booking booking);
 
-    void setNextProcessor(ThirdTicket50PercentOffer thirdTicket50PercentOffer);
 }

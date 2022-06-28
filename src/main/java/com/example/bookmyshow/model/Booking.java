@@ -9,7 +9,6 @@ import java.util.List;
 
 @Entity
 @Table(name = "booking")
-//@Table(name = "booking", uniqueConstraints={@UniqueConstraint(columnNames={"show_id","booking"})})
 @Getter
 @Setter
 public class Booking {

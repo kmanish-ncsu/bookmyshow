@@ -5,7 +5,10 @@ import com.example.bookmyshow.data.ShowSeatRepository;
 import com.example.bookmyshow.model.Booking;
 import com.example.bookmyshow.model.ShowSeat;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import javax.persistence.EntityManager;
@@ -17,8 +20,13 @@ import java.util.List;
 @Component
 public class RemoveExpiredReservations {
 
-    public static final int SESION_TIMEOUT = 30000;//30 seconds for demo, actually it could be 10 minutes
     public static final int DELETE_UNRESERVED_POLL_FREQUENCY = 10000;
+
+    @Value("${payment.session.timeout.in.msec}")
+    private Integer sessionTimeout;
+
+    @Value("${polling.frequency.in.msec : 10000}")
+    private static final int pollingFrequency = 10000;
 
     @Autowired
     ShowSeatRepository showSeatRepository;
@@ -29,15 +37,15 @@ public class RemoveExpiredReservations {
     @PersistenceContext
     private EntityManager em;
 
-//    @Transactional
-//    @Scheduled(initialDelay = DELETE_UNRESERVED_POLL_FREQUENCY, fixedDelay = DELETE_UNRESERVED_POLL_FREQUENCY)
+    @Transactional
+    @Scheduled(initialDelay = pollingFrequency, fixedDelay = pollingFrequency)
     public void removeExpiredReservations(){
         //fetch all PENDING ShowSeats
-        List<ShowSeat> pendingShowSeats = showSeatRepository.findAllByStatusIs(ShowSeat.BookingStatus.RESERVED_PAYMENT_PENDING.toString());
+        List<ShowSeat> pendingShowSeats = showSeatRepository.findAllByStatusIs(ShowSeat.BookingStatus.RESERVED_PAYMENT_PENDING);
         if(!CollectionUtils.isEmpty(pendingShowSeats)){
             //if now() - createddate > SESION_TIMEOUT then status="" and delete Booking
             for(ShowSeat showSeat: pendingShowSeats)
-            if(Duration.between(showSeat.getReservationTime(), LocalDateTime.now()).toMillis() > SESION_TIMEOUT){
+            if(Duration.between(showSeat.getReservationTime(), LocalDateTime.now()).toMillis() > sessionTimeout){
                 Booking booking = showSeat.getBooking();
                 showSeat.setStatus(ShowSeat.BookingStatus.UNRESERVED);
                 showSeat.setBooking(null);

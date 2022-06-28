@@ -21,7 +21,7 @@ public interface ShowSeatRepository extends JpaRepository<ShowSeat, Long> {
     @Query(value = "SELECT ss.* FROM SHOW_SEAT ss where ss.show_id=?1 and ss.status IN (?2)", nativeQuery = true)
     List<ShowSeat> findAllPendingShowSeatsNative(Long showid, String status);
 
-    List<ShowSeat> findAllByStatusIs(String status);
+    List<ShowSeat> findAllByStatusIs(ShowSeat.BookingStatus status);
 
     List<ShowSeat> findAllByBookingId(Long bookingId);
 }

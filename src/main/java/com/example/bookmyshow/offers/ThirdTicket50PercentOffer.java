@@ -10,22 +10,21 @@ import org.springframework.util.CollectionUtils;
 import java.math.BigDecimal;
 import java.util.List;
 
-@Component("third-ticket-offer")
 public class ThirdTicket50PercentOffer implements OfferProcessor {
 
     private static final double FIFTY_PERCENT_OFF = 0.5;
-    @Autowired
-    BookingRepository bookingRepository;
 
-    @Value("${theater.seat.basic.price}")
+    private BookingRepository bookingRepository;
+
     private BigDecimal basicPrice;
 
-    @Value("${theater.seat.basic.price}")
     private BigDecimal premiumPrice;
 
-    public OfferProcessor nextProcessor;
-
-
+    public ThirdTicket50PercentOffer(BookingRepository bookingRepository, BigDecimal basicPrice, BigDecimal premiumPrice) {
+        this.bookingRepository=bookingRepository;
+        this.basicPrice=basicPrice;
+        this.premiumPrice=premiumPrice;
+    }
 
     @Override
     public void process(List<ShowSeat> showSeats, Booking booking) {
@@ -49,16 +48,7 @@ public class ThirdTicket50PercentOffer implements OfferProcessor {
                 }
                 booking.setTotalAmount(total);
                 bookingRepository.save(booking);
-                System.out.println("ThirdTicket50PercentOffer APPLIED !!!!!!!!!!!!!");
             }
         }
-        if(this.nextProcessor!=null){
-            this.nextProcessor.process(showSeats, booking);
-        }
-    }
-
-    @Override
-    public void setNextProcessor(ThirdTicket50PercentOffer thirdTicket50PercentOffer) {
-        this.nextProcessor = nextProcessor;
     }
 }
