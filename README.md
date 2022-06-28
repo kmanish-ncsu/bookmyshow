@@ -15,7 +15,7 @@ Sample usage:
 Admin flow:
 
 Create Theaters:
-
+```
 curl --request POST \
   --url http://localhost:8080/admin/theaters \
   --header 'Content-Type: application/json' \
@@ -37,9 +37,10 @@ curl --request POST \
     }
   }
 ]'
+```
 
 Add seats to theaters:
-
+```
 curl --request POST \
   --url http://localhost:8080/admin/theaterseats \
   --header 'Content-Type: application/json' \
@@ -65,9 +66,11 @@ curl --request POST \
 		"seatType": "PREMIUM"
   }
 ]'
+```
 
 Create Movies:
 
+```
 curl --request POST \
   --url http://localhost:8080/admin/movies \
   --header 'Content-Type: application/json' \
@@ -80,9 +83,11 @@ curl --request POST \
 	}
  ]
 '
+```
 
 Create Shows:
 
+```
 curl --request POST \
   --url http://localhost:8080/admin/shows \
   --header 'Content-Type: application/json' \
@@ -114,9 +119,11 @@ curl --request POST \
 		
 	}
 ]'
+```
 
 Create Customers:
 
+```
 curl --request POST \
   --url http://localhost:8080/admin/customers \
   --header 'Content-Type: application/json' \
@@ -128,9 +135,11 @@ curl --request POST \
     "name": "Jacob"
   }
 ]'
+```
 
 Create Offers for Theaters
 
+```
 curl --request POST \
   --url http://localhost:8080/admin/offers \
   --header 'Content-Type: application/json' \
@@ -144,11 +153,14 @@ curl --request POST \
 		"theaters": [1]
   }
 ]'
+```
+
 
 User flow:
 
 Fetch movie shows:
 
+```
 curl --request GET \
   --url http://localhost:8080/bms/movieshows \
   --header 'Content-Type: application/json' \
@@ -158,8 +170,11 @@ curl --request GET \
 "city": "HYD"
 }
 '
+```
+
 Fetch Seats for a show:
 
+```
 curl --request GET \
   --url http://localhost:8080/bms/showseats \
   --header 'Content-Type: application/json' \
@@ -167,9 +182,11 @@ curl --request GET \
 "showid": 1
 }
 '
+```
 
 Select seats and start booking (reservation):
 
+```
 curl --request POST \
   --url http://localhost:8080/bms/reserveseats \
   --header 'Content-Type: application/json' \
@@ -180,9 +197,11 @@ curl --request POST \
   ],
   "customerId": 1
 }'
+```
 
 Proceed with payment. 
 If payment is successful, below query converts the reservation to a confirmed booking:
+```
 curl --request POST \
   --url http://localhost:8080/bms/confirmseats \
   --header 'Content-Type: application/json' \
@@ -193,6 +212,6 @@ curl --request POST \
   ],
   "customerId": 1
 }'
-
+```
 If payment is not completed withing the session timeout period, the reservation is deleted and seats are again available.
 
