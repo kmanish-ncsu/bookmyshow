@@ -41,31 +41,28 @@ curl --request POST \
 
 Add seats to theaters:
 ```
-curl --request POST \
-  --url http://localhost:8080/admin/theaterseats \
-  --header 'Content-Type: application/json' \
-  --data '[
+[
   {
     "theater": 1,
-		"seatType": "BASIC"
+    "seatType": "BASIC"
   },
  {
     "theater": 1,
-	 		"seatType": "BASIC"
+     "seatType": "BASIC"
   },
 	{
     "theater": 1,
-		"seatType": "PREMIUM"
+     "seatType": "PREMIUM"
   },
 	{
     "theater": 2,
-		"seatType": "BASIC"
+     "seatType": "BASIC"
   },
 	{
     "theater": 2,
-		"seatType": "PREMIUM"
+     "seatType": "PREMIUM"
   }
-]'
+]
 ```
 
 Create Movies:
