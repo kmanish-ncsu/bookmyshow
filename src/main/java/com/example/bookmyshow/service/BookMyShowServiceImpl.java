@@ -76,6 +76,7 @@ public class BookMyShowServiceImpl implements BookMyShowService {
      }
 
      @Transactional
+     // Need transaction as we are updating many tables : BOOKING, SHOW_SEAT
      public String reserveSeats(BookingRequest bookingRequest){
          List<ShowSeat> showSeats = showSeatRepository.findAllById(bookingRequest.getSeats());
          //This locks all showseats to be booked for customer
@@ -133,12 +134,16 @@ public class BookMyShowServiceImpl implements BookMyShowService {
             for(ShowSeat showSeat: showSeats){
                 showSeat.setStatus(ShowSeat.BookingStatus.CONFIRMED);
             }
-            return BOOKING_CONFIRMED;
+            return bookingConfirmedMessage(showSeats);
         } catch (SeatUnavailableException e) {
             return SEATS_UNAVAILABLE;
         } catch (InvalidBookingException e) {
             return INVALID_BOOKING;
         }
+    }
+
+    private String bookingConfirmedMessage(List<ShowSeat> showSeats) {
+        return BOOKING_CONFIRMED + ". Your booking ID is : " + showSeats.get(0).getBooking().getId() + ". Your seats : "+ showSeats.stream().map(showSeat -> showSeat.getTheaterSeat().getId()).collect(Collectors.toList());
     }
 
     private void validateBooking(List<ShowSeat> showSeats, BookingRequest bookingRequest) throws InvalidBookingException {
