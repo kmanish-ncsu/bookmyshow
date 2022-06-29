@@ -38,6 +38,7 @@ public class RemoveExpiredReservations {
     private EntityManager em;
 
     @Transactional
+    //Need transactions because we are changing 2 tables: updating SHOW_SEAT & deleting from BOOKING table
     @Scheduled(initialDelay = pollingFrequency, fixedDelay = pollingFrequency)
     public void removeExpiredReservations(){
         //fetch all PENDING ShowSeats

@@ -31,9 +31,6 @@ public class AdminServiceImpl implements AdminService {
     @Autowired
     ShowSeatRepository showSeatRepository;
 
-    @Autowired
-    OfferRepository offerRepository;
-
     @PersistenceContext
     EntityManager em;
 
@@ -53,6 +50,7 @@ public class AdminServiceImpl implements AdminService {
 
      @Override
      @Transactional
+     //We need transactions because we are adding rows to 2 tables SHOW & SHOW_SEAT
      public void addShows(List<Show> shows){
          for(Show show: shows){
              Show savedShow = showRepository.save(show);
@@ -82,6 +80,7 @@ public class AdminServiceImpl implements AdminService {
 
      @Override
      @Transactional
+     //We need transactions because we are updating 3 tables: OFFER, THEATER & THEATER_OFFERS
      public void addOffers(List<Offer> offers){
         for(Offer offer: offers){
             Offer persistedOffer= em.merge(offer);
@@ -92,6 +91,5 @@ public class AdminServiceImpl implements AdminService {
                 em.merge(theater);
             }
         }
-         em.flush();
      }
 }
