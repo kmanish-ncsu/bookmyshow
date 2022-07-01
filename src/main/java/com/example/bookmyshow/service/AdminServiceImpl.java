@@ -4,13 +4,14 @@ import com.example.bookmyshow.data.*;
 import com.example.bookmyshow.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import java.util.List;
 
-@Component
+@Service
 public class AdminServiceImpl implements AdminService {
 
     @Autowired
