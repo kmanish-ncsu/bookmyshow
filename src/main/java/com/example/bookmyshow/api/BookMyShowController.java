@@ -2,7 +2,7 @@ package com.example.bookmyshow.api;
 
 import com.example.bookmyshow.dto.ShowDTO;
 import com.example.bookmyshow.dto.ShowSeatDTO;
-import com.example.bookmyshow.service.BookMyShowServiceImpl;
+import com.example.bookmyshow.service.BookMyShowService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +14,7 @@ import java.util.List;
 public class BookMyShowController {
 
     @Autowired
-    BookMyShowServiceImpl bookMyShowService;
+    BookMyShowService bookMyShowService;
 
     @GetMapping(path = "/movieshows", consumes = MediaType.APPLICATION_JSON_VALUE)
     public List<ShowDTO> shows(@RequestBody ShowRequest showRequest){
